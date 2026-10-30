@@ -446,8 +446,9 @@ async function run(manager, action, btn) {
 }
 
 async function updateOne(manager, kind, name, btn) {
-  const p = ((INV || {})[manager] || []).find(x => x.kind === kind && x.name === name);
-  if (!p) return;
+  const row = ((INV || {})[manager] || []).find(x => x.kind === kind && x.name === name);
+  if (!row) return;
+  const p = { ...row, mid: manager };  // inventory rows carry no mid, and coolLeft needs it (via canUpdate)
   const left = coolLeft(p);
   const msg = left
     ? `${name} ${p.latest} is in its cooldown period (${leftText(left)} remaining).\n\nNew releases are held back in case they turn out to be hijacked. Update anyway?\n\n${p.version} → ${p.latest}`
